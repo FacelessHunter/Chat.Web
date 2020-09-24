@@ -1,0 +1,37 @@
+﻿@page "/signin"
+<h3>SignIn</h3>
+
+<AuthorizeView>
+    <NotAuthorized Context="Auth">
+        <EditForm Model="@SignInDTO" OnValidSubmit="HandleOnValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <p>
+                <label>
+                    Username:
+                    <InputText @bind-Value="@SignInDTO.Username" />
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    Password:
+                    <InputText @bind-Value="@SignInDTO.Password" type="password" />
+                </label>
+
+            </p>
+
+            <button class="btn btn-primary" type="submit">SignIn</button>
+        </EditForm>
+    </NotAuthorized>
+    <Authorized Context="Auth">
+        <a class="active">You are authorized @Auth.User.Claims.SingleOrDefault(c => c.Type == "username").Value!</a>
+        
+        <Counter></Counter>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+}
