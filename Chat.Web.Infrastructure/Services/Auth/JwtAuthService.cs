@@ -16,17 +16,19 @@ using Microsoft.Extensions.Options;
 using Chat.Web.Domain.Options;
 using System.Security.Claims;
 
-namespace Chat.Web.Infrastructure.Services.AuthServices
+namespace Chat.Web.Infrastructure.Services.Auth
 {
     public class JwtAuthService : IAuthService
     {
         private readonly ITokenProvider _tokenProvider;
+        private readonly ITokenStorageService _tokenStorageService;
         private readonly JwtAuthStateProvider _jwtAuthStateProvider;
         private readonly IOptions<AuthOptions> _options;
 
-        public JwtAuthService(ITokenProvider tokenProvider, AuthenticationStateProvider authenticationStateProvider, IOptions<AuthOptions> options)
+        public JwtAuthService(ITokenProvider tokenProvider, AuthenticationStateProvider authenticationStateProvider, ITokenStorageService tokenStorageService, IOptions<AuthOptions> options)
         {
             _tokenProvider = tokenProvider;
+            _tokenStorageService = tokenStorageService;
             _jwtAuthStateProvider = authenticationStateProvider as JwtAuthStateProvider;
             _options = options;
         }
@@ -35,37 +37,27 @@ namespace Chat.Web.Infrastructure.Services.AuthServices
         {
             var tokenPair = await _tokenProvider.GetNewTokensAsync(signInDTO.Username, signInDTO.Password);
 
-            await _jwtAuthStateProvider.SetTokensToStorageAsync(tokenPair);
+            await _tokenStorageService.SetTokensAsync(tokenPair);
 
-            if(!await _tokenProvider.ValidateTokenAsync(tokenPair.AccesToken))
+            if (!await _tokenProvider.ValidateTokenAsync(tokenPair.AccessToken))
             {
                 return false;
             }
-            var claims = _tokenProvider.ParseToken(tokenPair.AccesToken);
+            var claims = _tokenProvider.ParseToken(tokenPair.AccessToken);
 
             _jwtAuthStateProvider.MarkUserAsAuthenticated(claims);
             return true;
         }
 
-        public async Task<bool> SignOutAsync()
+        public async Task SignOutAsync()
         {
-            return await _jwtAuthStateProvider.RemoveTokensInStorageAsync();
+            await _tokenStorageService.RemoveTokensAsync();
+            _jwtAuthStateProvider.MarkUserAsLoggedOut();
         }
 
-        public async Task<bool> SignUpAsync(SignUpDTO loginDTO)
+        public async Task<bool> SignUpAsync(SignUpDTO signUpDTO)
         {
             throw new NotImplementedException();
         }
-
-        public async Task<TokenPair> GetTokensAsync()
-        {
-            if (_jwtAuthStateProvider.Tokens == null)
-            {
-
-            }
-            return await GetTokensFromStorageAsync();
-        }
-
-     
     }
 }

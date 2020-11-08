@@ -2,6 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
 }
 
 a, .btn-link {
@@ -180,4 +181,47 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+    .list-group {
+        max-height: 94%;
+        min-height: 94%;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /*
+*
+* ==========================================
+* CUSTOM UTIL CLASSES
+* ==========================================
+*
+*/
+    .custom-scrollbar-js,
+    .custom-scrollbar-css {
+        height: 85%;
+    }
+
+
+    /* Custom Scrollbar using CSS */
+    .custom-scrollbar-css {
+        overflow-y: scroll;
+    }
+
+        /* scrollbar width */
+        .custom-scrollbar-css::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* scrollbar track */
+        .custom-scrollbar-css::-webkit-scrollbar-track {
+            background: #eee;
+        }
+
+        /* scrollbar handle */
+        .custom-scrollbar-css::-webkit-scrollbar-thumb {
+            border-radius: 1rem;
+            background-color: #00d2ff;
+            background-image: linear-gradient(to top, #00d2ff 0%, #3a7bd5 100%);
+        }
+
+
 }

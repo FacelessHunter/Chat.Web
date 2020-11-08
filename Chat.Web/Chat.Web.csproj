@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Chat\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Chat.Web.Domain\Chat.Web.Domain.csproj" />
     <ProjectReference Include="..\Chat.Web.Infrastructure\Chat.Web.Infrastructure.csproj" />
   </ItemGroup>

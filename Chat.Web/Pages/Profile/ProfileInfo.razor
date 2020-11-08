@@ -1,0 +1,13 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <div class="top-row border-right px-4 pt-sm-0 navbar navbar-light bg-light">
+            <a class="navbar-brand" href="#">
+                <img src="images/person.png" class="img-thumbnail rounded" height="50" width="50" alt="Image of anonymous person">
+            </a>
+            <a class="active navbar-brand">@context.User.Claims.SingleOrDefault(c => c.Type == "username").Value!</a>
+        </div>
+    </Authorized>
+</AuthorizeView>
+@code {
+
+}

@@ -1,0 +1,16 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+<div class="sidebar">
+    <Chat.Web.Pages.Profile.ProfileInfo></Chat.Web.Pages.Profile.ProfileInfo>
+    <ChatList />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        @*<a target="_blank" @onclick="NavigateToSignIn">SignIn</a>*@
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>

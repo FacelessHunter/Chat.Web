@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Common.Domain.DTOs.ChatDTOs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Chat.Web.Domain.Abstractions.Http
 {
-    interface IHttpService
+    public interface IIdentityHttpService
     {
-        Task<TOut> GetAsync<TOut>(string endpoint);
+        Task<ViewChatDTO[]> GetUserChats();
     }
 }

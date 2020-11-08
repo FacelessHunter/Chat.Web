@@ -1,0 +1,26 @@
+﻿@inject IIdentityHttpService identityService
+
+
+<div id="content-1" class="px-4 custom-scrollbar-css ">
+    @{
+        foreach (var item in identityService.GetUserChats().GetAwaiter().GetResult())
+        {
+
+        <Chat.Web.Pages.ChatPages.ChatPreviewInfo ChatName="@item.Name"></Chat.Web.Pages.ChatPages.ChatPreviewInfo>
+
+        }
+    }
+
+</div>
+
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

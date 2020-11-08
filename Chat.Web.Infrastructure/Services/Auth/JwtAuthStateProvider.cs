@@ -17,41 +17,38 @@ using System.Threading.Tasks;
 
 namespace Chat.Web
 {
-    public class JwtAuthStateProvider : AuthenticationStateProvider
+     sealed public class JwtAuthStateProvider : AuthenticationStateProvider
     {
         private readonly ITokenProvider _tokenProvider;
         private readonly ILocalStorageService _localStorageService;
+        private readonly ITokenStorageService _tokenStorageService;
         private readonly IOptions<AuthOptions> _options;
         private readonly ILogger<JwtAuthStateProvider> _logger;
         public TokenPair Tokens { get; set; }
 
 
-        public JwtAuthStateProvider(ITokenProvider tokenProvider, ILocalStorageService localStorageService, IOptions<AuthOptions> options, ILogger<JwtAuthStateProvider> logger)
+        public JwtAuthStateProvider(ITokenProvider tokenProvider, ILocalStorageService localStorageService, ITokenStorageService tokenStorageService, IOptions<AuthOptions> options, ILogger<JwtAuthStateProvider> logger)
         {
             _tokenProvider = tokenProvider;
             _localStorageService = localStorageService;
+            _tokenStorageService = tokenStorageService;
             _options = options;
             _logger = logger;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var tokenPair = await GetTokensFromStorageAsync();
+            bool isAccessTokenExist = await _localStorageService.ContainKeyAsync(_options.Value.AccessTokenName);
+            bool isRefreshTokenExist = await _localStorageService.ContainKeyAsync(_options.Value.RefreshTokenName);
 
-
-            if (String.IsNullOrWhiteSpace(tokenPair.AccesToken) || String.IsNullOrWhiteSpace(tokenPair.RefreshToken))
+            if (!(isAccessTokenExist || isRefreshTokenExist)) 
             {
                 var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
                 return new AuthenticationState(anonymousUser);
             }
 
-            if (!await _tokenProvider.ValidateTokenAsync(tokenPair.AccesToken))
-            {
-                tokenPair = await _tokenProvider.RenewTokensAsync(tokenPair.RefreshToken);
+            var token = await _tokenStorageService.GetTokenAsync();
 
-                await SetTokensToStorageAsync(tokenPair);
-            }
-
-            var claims = _tokenProvider.ParseToken(tokenPair.AccesToken);
+            var claims = _tokenProvider.ParseToken(token);
 
             var user = new ClaimsPrincipal(claims);
 
@@ -69,37 +66,6 @@ namespace Chat.Web
             var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
             var authState = Task.FromResult(new AuthenticationState(anonymousUser));
             NotifyAuthenticationStateChanged(authState);
-        }
-
-        public async Task SetTokensToStorageAsync(TokenPair tokenPair)
-        {
-            await _localStorageService.SetItemAsync<string>(_options.Value.AccessTokenName, tokenPair.AccesToken);
-            await _localStorageService.SetItemAsync<string>(_options.Value.RefreshTokenName, tokenPair.RefreshToken);
-            Tokens = new TokenPair(tokenPair.AccesToken, tokenPair.RefreshToken);
-        }
-
-        public async Task<TokenPair> GetTokensFromStorageAsync()
-        {
-            string accessToken = await _localStorageService.GetItemAsync<string>(_options.Value.AccessTokenName);
-            string refreshToken = await _localStorageService.GetItemAsync<string>(_options.Value.RefreshTokenName);
-
-            return new TokenPair(accessToken, refreshToken);
-        }
-
-        public async Task<bool> RemoveTokensInStorageAsync()
-        {
-            await _localStorageService.RemoveItemAsync(_options.Value.AccessTokenName);
-            await _localStorageService.RemoveItemAsync(_options.Value.RefreshTokenName);
-
-            if (!(await _localStorageService.ContainKeyAsync(_options.Value.AccessTokenName)
-                && await _localStorageService.ContainKeyAsync(_options.Value.RefreshTokenName)))
-                return false;
-            return true;
-        }
-        private async Task<TokenPair> Validate()
-        {
-
-            throw new NotImplementedException();
         }
     }
 }

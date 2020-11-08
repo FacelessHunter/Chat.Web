@@ -13,8 +13,6 @@ namespace Chat.Web.Domain.Abstractions.Auth
 
         Task<bool> SignUpAsync(SignUpDTO loginDTO);
 
-        Task<bool> SignOutAsync();
-
-        Task<TokenPair> GetTokensAsync();
+        Task SignOutAsync();
     }
 }

@@ -1,37 +1,39 @@
 ﻿@page "/signin"
-<h3>SignIn</h3>
 
-<AuthorizeView>
-    <NotAuthorized Context="Auth">
-        <EditForm Model="@SignInDTO" OnValidSubmit="HandleOnValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+    <AuthorizeView>
+        <NotAuthorized Context="Auth">
+            <div class="content px-4">
+                <div class="text-center">
+                    <h3>SignIn</h3>
+                </div>
+                <EditForm Model="@SignInDTO" OnValidSubmit="HandleOnValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
 
-            <p>
-                <label>
-                    Username:
-                    <InputText @bind-Value="@SignInDTO.Username" />
-                </label>
-            </p>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Login</label>
+                        <div class="col-sm-5">
+                            <InputText class="form-control" @bind-Value="@SignInDTO.Username" type="login" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-5">
+                            <InputText class="form-control" @bind-Value="@SignInDTO.Password" type="password" />
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" type="submit">SignIn</button>
 
-            <p>
-                <label>
-                    Password:
-                    <InputText @bind-Value="@SignInDTO.Password" type="password" />
-                </label>
+                </EditForm>
+            </div>
+        </NotAuthorized>
+        <Authorized Context="Auth">
 
-            </p>
+            <a class="active">You are authorized @Auth.User.Claims.SingleOrDefault(c => c.Type == "username").Value!</a>
+        </Authorized>
 
-            <button class="btn btn-primary" type="submit">SignIn</button>
-        </EditForm>
-    </NotAuthorized>
-    <Authorized Context="Auth">
-        <a class="active">You are authorized @Auth.User.Claims.SingleOrDefault(c => c.Type == "username").Value!</a>
-        
-        <Counter></Counter>
-    </Authorized>
-</AuthorizeView>
+    </AuthorizeView>
 
-@code {
+    @code {
 
-}
+    }

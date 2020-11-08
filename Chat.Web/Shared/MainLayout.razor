@@ -1,15 +1,15 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+        <div class="sidebar">
+            <NavMenu />
+        </div>
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+        <div class="main">
+            <div class="top-row px-4">
+                @*<a target="_blank" @onclick="NavigateToSignIn">SignIn</a>*@
+            </div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-    </div>
-
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+            <div class="content px-4">
+                @Body
+            </div>
+        </div>

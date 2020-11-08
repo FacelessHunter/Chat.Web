@@ -13,10 +13,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel;
 using Microsoft.AspNetCore.Components.Authorization;
-using Chat.Web.Infrastructure.Services.AuthServices;
 using Chat.Web.Infrastructure.Services.LocalStorage;
 using Chat.Web.Domain.Abstractions.Auth;
 using Chat.Web.Infrastructure.Services.Auth;
+using Chat.Web.Infrastructure.Services.Http;
+using Chat.Web.Domain.Abstractions.Http;
 
 namespace Chat.Web
 {
@@ -40,6 +41,7 @@ namespace Chat.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddAuthServices();
+            services.AddHttpServices();
 
 
 
@@ -70,6 +72,7 @@ namespace Chat.Web
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
         }
     }
 }

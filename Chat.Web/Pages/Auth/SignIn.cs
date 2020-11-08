@@ -1,6 +1,7 @@
 ﻿using Chat.Web.Domain.Abstractions.Auth;
+using Chat.Web.Domain.Abstractions.Http;
 using Chat.Web.Domain.DTOs.AuthDTOs;
-using Chat.Web.Infrastructure.Services.AuthServices;
+using Chat.Web.Infrastructure.Services.Auth;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace Chat.Web.Pages.Auth
         public SignInDTO SignInDTO { get; set; }
         [Inject]
         public IAuthService AuthService { get; set; }
+        [Inject]
+        public IIdentityHttpService identityHttpService { get; set; }
 
         public async Task HandleOnValidSubmit()
         {
